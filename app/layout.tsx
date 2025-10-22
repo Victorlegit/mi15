@@ -24,30 +24,20 @@ export default function RootLayout({
         <link rel="stylesheet" href="/css/bootstrap.min.css" />
         <link rel="stylesheet" href="/css/main.css" />
         
-        {/* Non-critical CSS - loaded after page render */}
-        <link 
-          rel="stylesheet" 
-          href="/css/animations.css" 
-          media="print" 
-          onLoad="this.media='all'" 
-        />
+        {/* Non-critical CSS */}
+        <link rel="stylesheet" href="/css/animations.css" />
         <link 
           rel="stylesheet" 
           href="/css/shop.css" 
           className="color-switcher-link"
-          media="print" 
-          onLoad="this.media='all'" 
         />
         
         {/* Font Awesome with preconnect */}
         <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link 
           rel="stylesheet" 
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
-          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" 
-          crossOrigin="anonymous" 
-          referrerPolicy="no-referrer" 
+          crossOrigin="anonymous"
         />
         
         {/* Favicons */}
@@ -59,28 +49,44 @@ export default function RootLayout({
       <body>
         {children}
         
+        {/* Load non-critical CSS after page load using a script */}
+        <Script id="load-non-critical-css" strategy="afterInteractive">
+          {`
+            // Load non-critical CSS after page becomes interactive
+            const loadCSS = (href) => {
+              const link = document.createElement('link');
+              link.rel = 'stylesheet';
+              link.href = href;
+              document.head.appendChild(link);
+            };
+            
+            // Load non-critical CSS files
+            loadCSS('/css/animations.css');
+            loadCSS('/css/shop.css');
+          `}
+        </Script>
+        
         {/* Non-critical scripts loaded after page content */}
         <Script 
           src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-          strategy="lazyOnload"
-          integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+          strategy="afterInteractive"
           crossOrigin="anonymous"
         />
         <Script 
           src="/js/vendor/modernizr-custom.js"
-          strategy="lazyOnload"
+          strategy="afterInteractive"
         />
         <Script 
           src="/js/compressed.js"
-          strategy="lazyOnload"
+          strategy="afterInteractive"
         />
         <Script 
           src="/js/main.js"
-          strategy="lazyOnload"
+          strategy="afterInteractive"
         />
         <Script 
           src="/js/switcher.js"
-          strategy="lazyOnload"
+          strategy="afterInteractive"
         />
       </body>
     </html>
