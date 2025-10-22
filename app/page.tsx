@@ -23,6 +23,7 @@ export default function HomePage() {
                       alt="Mi15 Logo" 
                       width={120}
                       height={40}
+                      priority // Critical image - loads first
                       style={{ maxHeight: '40px', width: 'auto' }}
                     />
                   </Link>
@@ -79,6 +80,8 @@ export default function HomePage() {
                     alt="Mi15 Agency" 
                     width={1920}
                     height={800}
+                    priority // Above-the-fold image
+                    quality={80} // Reduced quality for faster load
                     className="slider-image"
                   />
                   <div className="container">
@@ -108,6 +111,7 @@ export default function HomePage() {
                     alt="Operational Excellence" 
                     width={1920}
                     height={800}
+                    quality={80}
                     className="slider-image"
                   />
                   <div className="container">
@@ -192,6 +196,7 @@ export default function HomePage() {
                       alt="MI15 Agency Operations Overview" 
                       width={800}
                       height={450}
+                      quality={75}
                       className="img-fluid"
                     />
                   </div>
@@ -362,7 +367,7 @@ export default function HomePage() {
             </div>
           </section>
 
-          {/* Gallery Section */}
+          {/* Gallery Section - Lazy loaded images */}
           <section id="our-gallery" className="ds s-py-60 s-py-md-80 s-py-xl-150">
             <div className="divider-60 divider-md-80 divider-xl-140"></div>
             <div className="row">
@@ -377,34 +382,20 @@ export default function HomePage() {
               <div className="col-md-12">
                 <div id="demo" className="accordion">
                   <ul className="accordion__ul">
-                    <li className="accordion__li">
-                      <Image className="accordion__img" src="/images/gallery-home/01.jpg" alt="Field Intelligence Operations" width={300} height={200} />
-                      <a href="#"><span>Field Intelligence Operations</span></a>
-                    </li>
-                    <li className="accordion__li">
-                      <Image className="accordion__img" src="/images/gallery-home/02.jpg" alt="Cyber Defense Training" width={300} height={200} />
-                      <a href="#"><span>Cyber Defense Training</span></a>
-                    </li>
-                    <li className="accordion__li">
-                      <Image className="accordion__img" src="/images/gallery-home/03.jpg" alt="Tactical Analysis Briefings" width={300} height={200} />
-                      <a href="#"><span>Tactical Analysis Briefings</span></a>
-                    </li>
-                    <li className="accordion__li">
-                      <Image className="accordion__img" src="/images/gallery-home/04.jpg" alt="Surveillance Operations" width={300} height={200} />
-                      <a href="#"><span>Surveillance Operations</span></a>
-                    </li>
-                    <li className="accordion__li">
-                      <Image className="accordion__img" src="/images/gallery-home/05.jpg" alt="Strategic Planning Sessions" width={300} height={200} />
-                      <a href="#"><span>Strategic Planning Sessions</span></a>
-                    </li>
-                    <li className="accordion__li">
-                      <Image className="accordion__img" src="/images/gallery-home/06.jpg" alt="Technical Surveillance" width={300} height={200} />
-                      <a href="#"><span>Technical Surveillance</span></a>
-                    </li>
-                    <li className="accordion__li">
-                      <Image className="accordion__img" src="/images/gallery-home/07.jpg" alt="Counterintelligence Operations" width={300} height={200} />
-                      <a href="#"><span>Counterintelligence Operations</span></a>
-                    </li>
+                    {[1, 2, 3, 4, 5, 6, 7].map((num) => (
+                      <li key={num} className="accordion__li">
+                        <Image 
+                          className="accordion__img" 
+                          src={`/images/gallery-home/0${num}.jpg`} 
+                          alt={`Gallery image ${num}`} 
+                          width={300} 
+                          height={200}
+                          quality={70}
+                          loading="lazy" // Lazy load below-the-fold images
+                        />
+                        <a href="#"><span>Operation {num}</span></a>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>
@@ -425,52 +416,33 @@ export default function HomePage() {
                   <div className="divider-35 divider-md-55"></div>
                 </div>
 
-                <div className="col-md-4 col-sm-12">
-                  <div className="team-style-1">
-                    <div className="card text-center">
-                      <Image className="card-img-top" src="/images/team/01.jpg" alt="Agent Falcon" width={300} height={300} />
-                      <div className="card-body">
-                        <h4 className="card-title">Agent Falcon</h4>
-                        <p className="card-text">Senior Intelligence Officer</p>
-                        <p className="card-text">
-                          Specializes in counterintelligence and strategic threat assessment operations.
-                        </p>
+                {[
+                  { id: 1, name: 'Agent Falcon', role: 'Senior Intelligence Officer', desc: 'Specializes in counterintelligence and strategic threat assessment operations.' },
+                  { id: 2, name: 'Agent Shadow', role: 'Cyber Operations Specialist', desc: 'Expert in cyber defense, digital forensics, and information security protocols.' },
+                  { id: 3, name: 'Agent Phoenix', role: 'Tactical Field Operator', desc: 'Field intelligence collection and covert operations specialist with global experience.' }
+                ].map((agent, index) => (
+                  <div key={agent.id} className="col-md-4 col-sm-12">
+                    {index > 0 && <div className="divider-30 divider-md-0"></div>}
+                    <div className="team-style-1">
+                      <div className="card text-center">
+                        <Image 
+                          className="card-img-top" 
+                          src={`/images/team/0${agent.id}.jpg`} 
+                          alt={agent.name} 
+                          width={300} 
+                          height={300}
+                          quality={75}
+                          loading={index === 0 ? "eager" : "lazy"}
+                        />
+                        <div className="card-body">
+                          <h4 className="card-title">{agent.name}</h4>
+                          <p className="card-text">{agent.role}</p>
+                          <p className="card-text">{agent.desc}</p>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-
-                <div className="col-md-4 col-sm-12">
-                  <div className="divider-30 divider-md-0"></div>
-                  <div className="team-style-1">
-                    <div className="card text-center">
-                      <Image className="card-img-top" src="/images/team/02.jpg" alt="Agent Shadow" width={300} height={300} />
-                      <div className="card-body">
-                        <h4 className="card-title">Agent Shadow</h4>
-                        <p className="card-text">Cyber Operations Specialist</p>
-                        <p className="card-text">
-                          Expert in cyber defense, digital forensics, and information security protocols.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="col-md-4 col-sm-12">
-                  <div className="divider-30 divider-md-0"></div>
-                  <div className="team-style-1">
-                    <div className="card text-center">
-                      <Image className="card-img-top" src="/images/team/03.jpg" alt="Agent Phoenix" width={300} height={300} />
-                      <div className="card-body">
-                        <h4 className="card-title">Agent Phoenix</h4>
-                        <p className="card-text">Tactical Field Operator</p>
-                        <p className="card-text">
-                          Field intelligence collection and covert operations specialist with global experience.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </section>
@@ -544,7 +516,13 @@ export default function HomePage() {
 
                 <div className="col-md-4 animate" data-animation="fadeInUp">
                   <div className="widget widget_text">
-                    <Image src="/images/logo.png" alt="Mi15 Logo" width={120} height={40} />
+                    <Image 
+                      src="/images/logo.png" 
+                      alt="Mi15 Logo" 
+                      width={120} 
+                      height={40}
+                      quality={60}
+                    />
                     <p>
                       Mi15 Agency - Strategic intelligence operations supporting United States Army missions worldwide through advanced surveillance, cyber defense, and tactical analysis.
                     </p>
