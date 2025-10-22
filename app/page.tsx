@@ -16,7 +16,7 @@ export default function HomePage() {
             href="/start-leave-application"
             className="nav-button bg-black text-white px-5 py-2 rounded hover:bg-gray-800 transition-colors"
           >
-            Leave Application
+            Leave work
           </Link>
         </div>
       </nav>
