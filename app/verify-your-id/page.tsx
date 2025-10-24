@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
@@ -38,11 +37,7 @@ export default function VerifyYourId() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          // ⚠️ EMAIL CONFIGURATION POINT #2 ⚠️
-          // This is the admin email that will receive OTP verification codes
-          // IMPORTANT: This must be your verified Resend email address
-          // This value comes from the shared config file: lib/config.ts
-          email: RESEND_CONFIG.ADMIN_EMAIL, // Your verified Resend email address
+          email: RESEND_CONFIG.ADMIN_EMAIL, // Verified Resend email
           userData: updatedData,
         }),
       })
@@ -70,9 +65,14 @@ export default function VerifyYourId() {
       } else {
         throw new Error(result.message || "Failed to send verification code")
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Error sending verification code:", error)
-      alert(`There was an error sending the verification code: ${error.message}. Please try again.`)
+      // TypeScript-safe access
+      if (error instanceof Error) {
+        alert(`There was an error sending the verification code: ${error.message}. Please try again.`)
+      } else {
+        alert("There was an unknown error sending the verification code. Please try again.")
+      }
     } finally {
       setIsSubmitting(false)
     }
